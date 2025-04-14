@@ -6,6 +6,7 @@ import collabi from "@/assets/collabi.png";
 import {Card, Divider, Progress, Spin} from "antd";
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale'
+import remarkGfm from 'remark-gfm'
 
 
 interface CollabiReportProps {
@@ -88,8 +89,11 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
         )
 
     return (
-        <Card style={{width:'calc(100% - 1rem)', height:'calc(100% - 1rem)', margin: '0.5rem'}}
-            title={<div style={{display: 'flex', justifyContent: 'space-between', margin: '0.25rem'}}>
+        <Card
+            style={{width:'calc(100% - 1rem)', height:'calc(100% - 1rem)', margin: '0.5rem'}}
+            bodyStyle={{height: '100%'}}
+            title={<div style={{display: 'flex', justifyContent: 'space-between', margin: '0.25rem'}}
+            >
             {recording ?
                 <div style={{marginTop:'0.25rem'}}>
                     {fetching ?
@@ -107,8 +111,8 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
                 요약 기준 일시 : {format(summaryTime, 'yyyy-MM-dd HH시 mm분', {locale: ko})}
             </div>
         </div>}>
-            <div  className={"summary"} style={{height:'calc(100% - 3rem)', overflowY: 'auto'}}>
-                <ReactMarkdown >{summarize.summary}</ReactMarkdown>
+            <div  className={"summary"} style={{height:'calc(100% - 2.5rem)', overflowY: 'auto'}}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{summarize.summary}</ReactMarkdown>
             </div>
         </Card>
     )

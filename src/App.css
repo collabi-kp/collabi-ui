@@ -43,6 +43,17 @@
   margin-left: -20px;
 }
 
-.summary h2{
+.summary h1{
   font-size: 1.5rem;
+  margin: 0.5rem;
+}
+
+
+.summary h2{
+  font-size: 1.2rem;
+  margin: 0.5rem;
+}
+
+.ref-button span{
+  text-align: left;
 }

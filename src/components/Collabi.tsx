@@ -1,9 +1,12 @@
 import {JSX, useEffect, useRef, useState} from "react";
 import collabi from "@/assets/collabi.png";
 import angry from "@/assets/angry.png"
-import {Avatar, Card} from "antd";
+import {Avatar, Button, Card, Modal} from "antd";
 import {useAngryCollabi} from "@/hooks/AngryCollabi.tsx";
 import {useHappyCollabi} from "@/hooks/HappyCollabi.tsx";
+import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface CollabiMessage {
     type: string;
@@ -36,13 +39,16 @@ export function Collabi({recording, meetMembers, meetTitle, transcribe, summariz
             type: 'happy',
             message: <div>
                 <b>Q: {res.question}</b>
-                <div>A: {res.answer}</div>
+                <div dangerouslySetInnerHTML={{__html:`A: ${res.answer?.replaceAll('\n','<br/>')}`}} />
             </div>,
             timestamp: res.timestamp
         }))
         const angryCollabis = angryCollabi.angryCollabiResponses.current.map(res => ({
             type: 'angry',
-            message: res.text,
+            message: <div style={{width:'100%'}}>
+                <div dangerouslySetInnerHTML={{__html:res.text?.replaceAll('\n','<br/>')}} />
+                {res.citations.map((citation) => <SummaryReferenceInfo ref={citation.split('/').at(-1).replace('summary_','').replace('.txt','')}/>)}
+            </div>,
             timestamp: res.timestamp
         }))
         setCollabiMessages([...happyCollabis, ...angryCollabis])
@@ -100,8 +106,8 @@ function HappyCollabiMessage({msg}) {
     return (
         <div style={{display: "flex", width: 'calc(100% - 1rem)', margin: '0.5rem', padding: '0.5rem'}}>
 
-            <Avatar size="large" icon={<img src={collabi} alt="good"/>}
-                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto'}}/>
+            <Avatar  shape="circle" size={80} icon={<img src={collabi}  alt="good"/>}
+                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto', minWidth:'80px'}}/>
             <div className="speech-bubble" style={{padding:'1rem'}}>
                 {msg}
             </div>
@@ -112,11 +118,61 @@ function HappyCollabiMessage({msg}) {
 function AngryCollabiMessage({msg}) {
     return (
         <div style={{display: "flex", width: 'calc(100% - 1rem)', margin: '0.5rem'}}>
-            <Avatar size="large" icon={<img src={angry} alt="bad"/>}
-                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto'}}/>
-            <div className="bad-speech-bubble" style={{padding:'1rem'}}>
-                <div style={{margin: '0.5rem'}} dangerouslySetInnerHTML={{__html: msg.replaceAll('\n', '<br/>')}}/>
+            <Avatar shape="circle" size={80} icon={<img src={angry} style={{minWidth:'100px'}} alt="bad"/>}
+                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto', minWidth:'80px'}}/>
+            <div className="bad-speech-bubble" style={{width:'calc(100% - 100px - 1rem)',padding:'1rem'}}>
+                {msg}
             </div>
         </div>
     )
+}
+
+function SummaryReferenceInfo({ref}){
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const apiGatewayId = import.meta.env.VITE_GATEWAY_ID
+    const region =  import.meta.env.VITE_REGION
+    const apiGatewayBaseUrl = `https://${apiGatewayId}.execute-api.${region}.amazonaws.com/prod`
+    const [result, setResult] = useState()
+    const [fetching, setFetching] = useState(false)
+
+    const showModal = () => {
+        getRef()
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+
+    const getRef = async ()=>{
+        setFetching(true)
+        const res = await axios.get(`${apiGatewayBaseUrl}/summary`,
+            {
+                params: {
+                    audio_id: ref,
+                    summary_language: "ko",
+                    translation_language: "ko"
+                }
+            })
+        setResult(res.data.summary)
+            setFetching(false)
+    }
+    return <>
+        <Button className="ref-button" type="text" onClick={showModal} style={{color:'blue', width:'100%', fontSize:'0.7rem', height:'1rem', textAlign:'left'}}> {ref} </Button>
+        <Modal
+            okButtonProps={{ style: { display:'none' } }}
+            cancelButtonProps={{ style: { display:'none' } }}
+            width="80vh"
+            height="80vh"
+            loading={fetching} title={ref} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <div  className={"summary"} style={{height:'calc(100% - 2.5rem)', overflowY: 'auto'}}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{result}</ReactMarkdown>
+            </div>
+        </Modal>
+    </>
 }

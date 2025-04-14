@@ -57,7 +57,6 @@ export const useSummarize = (audioId: string, mode: any) => {
         try {
 
             console.log("About to send transcription to API gateway - START", {audioId})
-            console.log(transcription)
             const res = await axios.post(`${apiGatewayBaseUrl}/summarization`,
                 {
                     audio_id: audioId,

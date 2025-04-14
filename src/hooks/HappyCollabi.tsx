@@ -29,9 +29,10 @@ export function useHappyCollabi(transcribe) {
                 queestions: questions,
             }
         )
-        const questionBlack = ["","없음","질문을 처리할 수 없습니다."]
-        if(questionBlack.includes(res.data.question) ) return
-        happyCollabiResponses.current = [...happyCollabiResponses.current, res.data]
+        console.log(res.data)
+        // const questionBlack = ["","없음","질문을 처리할 수 없습니다."]
+        // if(questionBlack.includes(res.data.question) ) return
+        happyCollabiResponses.current = [...happyCollabiResponses.current, ...res.data.questions]
     }
 
     function clearResponses() {
