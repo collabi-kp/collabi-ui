@@ -5,7 +5,7 @@ import {Collabi} from "@/components/Collabi.tsx";
 import {Transcribe} from "@/components/Transcribe.tsx";
 import {CollabiReport} from "@/components/CollabiReport.tsx";
 import {useTranscribe} from "@/hooks/Transcribe.tsx";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {type_of_audio} from "@/hooks/Summarize.tsx";
 
 function App() {
@@ -13,6 +13,7 @@ function App() {
     const [meetTitle, setMeetTitle] = useState('')
     const [meetMembers, setMeetMembers] = useState('')
     const [finalSummarize, setFinalSummarize] = useState(false)
+    const summarizeData = useRef<string>('')
     const transcribe = useTranscribe(meetTitle, meetMembers)
 
     return (
@@ -38,12 +39,12 @@ function App() {
                 <ResizablePanel defaultSize={50}>
                     <CollabiReport audioId={transcribe.audioId} recording={transcribe.recording}
                                    transcribe={transcribe.transcribe} mode={mode} finalSummarize={finalSummarize}
-                                   setFinalSummarize={setFinalSummarize}/>
+                                   setFinalSummarize={setFinalSummarize} summarizeData={summarizeData} />
                 </ResizablePanel>
                 <ResizableHandle/>
                 <ResizablePanel defaultSize={30}>
                     <Collabi recording={transcribe.recording} transcribe={transcribe.transcribe} meetTitle={meetTitle}
-                             meetMembers={meetMembers}
+                             meetMembers={meetMembers} summarizeData={summarizeData}
                     />
                 </ResizablePanel>
                 <ResizableHandle/>

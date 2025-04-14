@@ -16,12 +16,12 @@ interface CollabiProps {
     meetTitle: string
     meetMembers: string
     transcribe: any
-
+    summarizeData: string
 }
 
-export function Collabi({recording, meetMembers, meetTitle, transcribe}: CollabiProps): JSX.Element {
+export function Collabi({recording, meetMembers, meetTitle, transcribe, summarizeData}: CollabiProps): JSX.Element {
     const happyCollabi = useHappyCollabi(transcribe)
-    const angryCollabi = useAngryCollabi(meetTitle, meetMembers, transcribe)
+    const angryCollabi = useAngryCollabi(meetTitle, meetMembers, transcribe,summarizeData)
     const chatRef = useRef<HTMLDivElement>(null)
     const [collabiMessages, setCollabiMessages] = useState<CollabiMessage[]>([])
     const [intervalId, setIntervalId] = useState()

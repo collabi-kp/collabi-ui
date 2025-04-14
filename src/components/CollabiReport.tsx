@@ -15,9 +15,10 @@ interface CollabiReportProps {
     mode: string
     finalSummarize: boolean
     setFinalSummarize: (value: boolean) => void
+    summarizeData: RefObject<string>
 }
 
-export function CollabiReport({audioId, recording, transcribe, mode, finalSummarize, setFinalSummarize}: CollabiReportProps): JSX.Element {
+export function CollabiReport({audioId, recording, transcribe, mode, finalSummarize, setFinalSummarize, summarizeData}: CollabiReportProps): JSX.Element {
     const summarize = useSummarize(audioId,mode)
     const [intervalId, setIntervalId] = useState()
     const [fetching, setFetching] = useState(false)
@@ -54,10 +55,6 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
     }, [recording]);
 
     useEffect(() => {
-        console.log(fetching)
-    }, [fetching]);
-
-    useEffect(() => {
         if (summaryTime === undefined) return
         setTimeout(() => calcDuration(summaryTime), 1000)
     }, [duration, summaryTime]);
@@ -67,6 +64,10 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
         const seconds = Math.floor((duration % (1000 * 60)) / 1000);
         setDuration(seconds)
     }
+
+    useEffect(() => {
+        summarizeData.current = summarize.summary
+    }, [summarize.summary]);
 
     if (summarize.summary === undefined)
         return (

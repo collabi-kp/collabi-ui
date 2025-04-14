@@ -1,28 +1,15 @@
 import axios from "axios";
 import {useRef} from "react";
 
-interface MeetingData {
-    content: string
-    format: string
-}
-
-interface LastProcessedQa {
-    question: string,
-    answer: string,
-    timestamp: number
-}
-
 interface Request {
-    input_type: string
-    meeeting_data: MeetingData
-    last_processed_qa: LastProcessedQa
-    // last_conversation: string
+    meeting_text: string
+    questions:string[]
+
 }
 
 interface Response {
-    response: string
-    processed_questions: string[]
-    last_processed_qa: LastProcessedQa
+    question: string,
+    answer: string
     timestamp: number
 }
 
@@ -35,21 +22,17 @@ export function useHappyCollabi(transcribe) {
     const happyCollabiResponses = useRef<Array<Response>>([]);
 
     async function getHappyCollabiResponse(): Response {
-        let last_processed_qa: LastProcessedQa = null
-        if (happyCollabiResponses.current.length !== 0) {
-            let index = happyCollabiResponses.current.length - 1
-            last_processed_qa = happyCollabiResponses.current[index].last_processed_qa
-        }
+        let questions = happyCollabiResponses.current?.map((response: Response) => response.question)
+        // if (happyCollabiResponses.current.length !== 0) {
+        //     let index = happyCollabiResponses.current.length - 1
+        //     last_processed_qa = happyCollabiResponses.current[index].last_processed_qa
+        // }
 
 
         const res = await axios.post(`${apiGatewayBaseUrl}/happy`,
             {
-                input_type: 'json',
-                meeting_data: {
-                    content: transcribe.current.map(speak => `${speak.value}`).join('\n'),
-                    format: 'text'
-                },
-                last_processed_qa: last_processed_qa,
+                meeting_text: transcribe.current.map(speak => `${speak.value}`).join('\n'),
+                queestions: questions,
             }
         )
 
