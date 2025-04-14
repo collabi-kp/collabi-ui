@@ -53,7 +53,7 @@ export function Navigation({
     return (
         <div style={{height: '5rem', width: '100vw', margin: 0, padding: 0}}>
             <div style={{display: "flex", justifyContent: 'space-between', width: '100%'}}>
-                <img src={logo} alt={"0"} style={{height: '4rem', margin: ' auto 1rem'}}/>
+                <img src={logo} alt={"0"} style={{height: '2rem', margin: ' auto 1rem'}}/>
                 <div style={{display: "flex", justifyContent: 'space-between', width: '100%', margin: 'auto 1rem'}}>
                     <div style={{width: '100%', marginTop: '0.25rem'}}>
                         <div style={{display: "flex", justifyContent: 'space-between', width: '100%'}}>

@@ -2,7 +2,7 @@ import ReactMarkdown from 'react-markdown';
 import {JSX, RefObject, useEffect, useState} from "react";
 import {useSummarize} from "@/hooks/Summarize.tsx";
 import {TranscribeResult} from "@/hooks/Transcribe.tsx";
-import collabi from "@/assets/collabi.png";
+import loading from "@/assets/loading.png";
 import {Card, Divider, Progress, Spin} from "antd";
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale'
@@ -77,13 +77,10 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
                 height: '100%',
                 alignItems: "center",
                 justifyContent: 'center',
-                backgroundColor: 'darkseagreen'
+                backgroundColor: '#bcd1ad'
             }}>
                 <div style={{textAlign: "center"}}>
-                    <img src={collabi} alt={"collabi"} style={{display: null}}/>
-                    <div style={{fontSize: '40px', fontFamily: "Nanum Pen Script", fontWeight: '400'}}>콜라비가 회의를
-                        준비중입니다.
-                    </div>
+                    <img src={loading} alt={"collabi"} style={{display: null}}/>
                 </div>
             </div>
         )

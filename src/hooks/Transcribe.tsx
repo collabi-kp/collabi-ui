@@ -51,12 +51,28 @@ export function useTranscribe(meetTitle, meetMembers) {
         setRecording(true)
         transcribe.current = []
         setRecordStartTime(new Date())
-        setAudioId(`${meetTitle}_${meetMembers}_${new Date().toISOString()}`)
+        setAudioId(`${meetTitle}_${meetMembers}_${getKSTISOStringWithoutLibrary()}`)
         const stream = await openRecordStream()
         startTranscription(stream)
     }
 
-    async function openRecordStream() {
+    function getKSTISOStringWithoutLibrary() {
+        const now = new Date();
+        const utcOffset = now.getTimezoneOffset() * 60000; // UTC 시간과의 차이를 밀리초 단위로 변환
+        const kstOffset = 9 * 60 * 60000; // 한국 시간과의 고정 시차 (9시간)을 밀리초 단위로 변환
+        const kstDate = new Date(now.getTime() + utcOffset + kstOffset);
+        const year = kstDate.getFullYear();
+        const month = String(kstDate.getMonth() + 1).padStart(2, '0');
+        const day = String(kstDate.getDate()).padStart(2, '0');
+        const hours = String(kstDate.getHours()).padStart(2, '0');
+        const minutes = String(kstDate.getMinutes()).padStart(2, '0');
+        const seconds = String(kstDate.getSeconds()).padStart(2, '0');
+        const milliseconds = String(kstDate.getMilliseconds()).padStart(3, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+    }
+
+
+        async function openRecordStream() {
         const mediaMic = await navigator.mediaDevices.getUserMedia({audio: true})
         setMediaStream(mediaMic)
         // Join the two audio stream sources
