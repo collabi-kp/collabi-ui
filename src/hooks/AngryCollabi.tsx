@@ -11,7 +11,8 @@ interface Request {
 
 interface Response {
     text: string
-    timestamp: number
+    timestamp: number,
+    citations: Array<string>,
 }
 
 // 30초 단위 call

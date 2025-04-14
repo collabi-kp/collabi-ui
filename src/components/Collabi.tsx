@@ -82,7 +82,7 @@ export function Collabi({recording, meetMembers, meetTitle, transcribe, summariz
             style={{width: 'calc(100% - 1rem)', height: 'calc(100% - 1rem)', margin: '0.5rem'}}
             bodyStyle={{height: '100%'}}
         >
-            <div style={{height: '100%', overflowY: 'auto', flexDirection: 'column-reverse'}} ref={chatRef}>
+            <div style={{height: 'calc(100% - 2rem)', overflowY: 'auto', flexDirection: 'column-reverse'}} ref={chatRef}>
                 {
                     collabiMessages.sort((a, b) => a.timestamp - b.timestamp).map((speak) => {
                         if (speak.type === 'happy')

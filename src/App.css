@@ -4,7 +4,7 @@
 .speech-bubble {
   width: 100%;
   position: relative;
-  background: #10da5e;
+  background: #c7DB9C;
   border-radius: .4em;
 }
 
@@ -16,7 +16,7 @@
   width: 0;
   height: 0;
   border: 20px solid transparent;
-  border-right-color: #10da5e;
+  border-right-color: #c7DB9C;
   border-left: 0;
   margin-top: -20px;
   margin-left: -20px;
@@ -25,7 +25,7 @@
 .bad-speech-bubble {
   width: 100%;
   position: relative;
-  background: #cd43df;
+  background: #ffd09b;
   border-radius: .4em;
 }
 
@@ -37,8 +37,12 @@
   width: 0;
   height: 0;
   border: 20px solid transparent;
-  border-right-color: #cd43df;
+  border-right-color: #ffd09b;
   border-left: 0;
   margin-top: -20px;
   margin-left: -20px;
+}
+
+.summary h2{
+  font-size: 1.5rem;
 }

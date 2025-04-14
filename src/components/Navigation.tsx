@@ -69,11 +69,11 @@ export function Navigation({
 
                         <div>
                             {recording ?
-                                <Button style={{height: '2rem', width:'16rem', margin:'0.25rem 0', backgroundColor:'darkolivegreen'}} onClick={() => stopRecording()}
+                                <Button style={{height: '2rem', width:'16rem', margin:'0.25rem 0', backgroundColor:'#252422'}} onClick={() => stopRecording()}
                                         disabled={!recording}>
-                                    회의중({duration}) (중지하기)
+                                    🔴ㅤ회의중({duration}) (중지하기)
                                 </Button>
-                                : <Button style={{height: '2.5rem', width:'16rem', margin:'0.25rem 0', backgroundColor:'darkolivegreen'}} onClick={() => startRecording()}
+                                : <Button style={{height: '2.5rem', width:'16rem', margin:'0.25rem 0', backgroundColor:'#252422'}} onClick={() => startRecording()}
                                         disabled={recording || finalSummarize}>
                                     {finalSummarize ?<>{"최종요약중"}</>: <>{"회의시작"}</>}
                                 </Button>

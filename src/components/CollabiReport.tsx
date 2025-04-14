@@ -94,8 +94,8 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
                 <div style={{marginTop:'0.25rem'}}>
                     {fetching ?
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <div>내용을 요약중입니다.</div>
                             <Spin/>
+                            <div>ㅤ내용을 요약중입니다.</div>
                         </div>
                         :
                         <Progress percent={duration/30 * 100} format={()=><></>} percentPosition={{align: 'center', type: 'inner'}} size={[400, 20]} />
@@ -107,7 +107,7 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
                 요약 기준 일시 : {format(summaryTime, 'yyyy-MM-dd HH시 mm분', {locale: ko})}
             </div>
         </div>}>
-            <div style={{height:'calc(100% - 3rem)', overflowY: 'auto'}}>
+            <div  className={"summary"} style={{height:'calc(100% - 3rem)', overflowY: 'auto'}}>
                 <ReactMarkdown >{summarize.summary}</ReactMarkdown>
             </div>
         </Card>
