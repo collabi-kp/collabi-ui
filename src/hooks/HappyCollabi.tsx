@@ -23,23 +23,14 @@ export function useHappyCollabi(transcribe) {
 
     async function getHappyCollabiResponse(): Response {
         let questions = happyCollabiResponses.current?.map((response: Response) => response.question)
-        // if (happyCollabiResponses.current.length !== 0) {
-        //     let index = happyCollabiResponses.current.length - 1
-        //     last_processed_qa = happyCollabiResponses.current[index].last_processed_qa
-        // }
-
-
         const res = await axios.post(`${apiGatewayBaseUrl}/happy`,
             {
                 meeting_text: transcribe.current.map(speak => `${speak.value}`).join('\n'),
                 queestions: questions,
             }
         )
-
-        const questFilter = ['식별된 질문이 없습니다. ', '처리할 새로운 질문이 없습니다.']
-        if (questFilter.filter(quest => res.data.response.includes(quest)).length > 0) return
-        const previousRequests = happyCollabiResponses.current.map(res => res.response)
-        if (previousRequests.includes(res.data.response)) return
+        const questionBlack = ["","없음","질문을 처리할 수 없습니다."]
+        if(questionBlack.includes(res.data.question) ) return
         happyCollabiResponses.current = [...happyCollabiResponses.current, res.data]
     }
 

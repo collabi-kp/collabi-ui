@@ -3,7 +3,7 @@ import {JSX, RefObject, useEffect, useState} from "react";
 import {useSummarize} from "@/hooks/Summarize.tsx";
 import {TranscribeResult} from "@/hooks/Transcribe.tsx";
 import collabi from "@/assets/collabi.png";
-import {Divider, Progress, Spin} from "antd";
+import {Card, Divider, Progress, Spin} from "antd";
 import {format} from 'date-fns';
 import {ko} from 'date-fns/locale'
 
@@ -88,29 +88,28 @@ export function CollabiReport({audioId, recording, transcribe, mode, finalSummar
         )
 
     return (
-        <>
-            <div style={{display: 'flex', justifyContent: 'space-between', margin: '0.25rem'}}>
-                {recording ?
-                    <div style={{marginTop:'0.25rem'}}>
-                        {fetching ?
-                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                <div>내용을 요약중입니다.</div>
-                                <Spin/>
-                            </div>
-                            :
-                            <Progress percent={duration/30 * 100} format={()=><></>} percentPosition={{align: 'center', type: 'inner'}} size={[400, 20]} />
-                        }
-                    </div>
-                    :<div></div>
-                }
+        <Card style={{width:'calc(100% - 1rem)', height:'calc(100% - 1rem)', margin: '0.5rem'}}
+            title={<div style={{display: 'flex', justifyContent: 'space-between', margin: '0.25rem'}}>
+            {recording ?
                 <div style={{marginTop:'0.25rem'}}>
-                    요약 기준 일시 : {format(summaryTime, 'yyyy-MM-dd HH시 mm분', {locale: ko})}
+                    {fetching ?
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <div>내용을 요약중입니다.</div>
+                            <Spin/>
+                        </div>
+                        :
+                        <Progress percent={duration/30 * 100} format={()=><></>} percentPosition={{align: 'center', type: 'inner'}} size={[400, 20]} />
+                    }
                 </div>
+                :<div></div>
+            }
+            <div style={{marginTop:'0.25rem'}}>
+                요약 기준 일시 : {format(summaryTime, 'yyyy-MM-dd HH시 mm분', {locale: ko})}
             </div>
-            <Divider style={{margin: '0.25rem'}}/>
+        </div>}>
             <div style={{height:'calc(100% - 3rem)', overflowY: 'auto'}}>
                 <ReactMarkdown >{summarize.summary}</ReactMarkdown>
             </div>
-        </>
+        </Card>
     )
 }

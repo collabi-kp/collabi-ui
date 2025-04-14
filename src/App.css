@@ -2,7 +2,7 @@
 }
 
 .speech-bubble {
-  width: 80%;
+  width: 100%;
   position: relative;
   background: #10da5e;
   border-radius: .4em;
@@ -23,7 +23,7 @@
 }
 
 .bad-speech-bubble {
-  width: 80%;
+  width: 100%;
   position: relative;
   background: #cd43df;
   border-radius: .4em;
