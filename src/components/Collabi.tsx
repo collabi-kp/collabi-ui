@@ -39,15 +39,16 @@ export function Collabi({recording, meetMembers, meetTitle, transcribe, summariz
             type: 'happy',
             message: <div>
                 <b>Q: {res.question}</b>
-                <div dangerouslySetInnerHTML={{__html:`A: ${res.answer?.replaceAll('\n','<br/>')}`}} />
+                <div dangerouslySetInnerHTML={{__html: `A: ${res.answer?.replaceAll('\n', '<br/>')}`}}/>
             </div>,
             timestamp: res.timestamp
         }))
         const angryCollabis = angryCollabi.angryCollabiResponses.current.map(res => ({
             type: 'angry',
-            message: <div style={{width:'100%'}}>
-                <div dangerouslySetInnerHTML={{__html:res.text?.replaceAll('\n','<br/>')}} />
-                {res.citations.map((citation) => <SummaryReferenceInfo ref={citation.split('/').at(-1).replace('summary_','').replace('.txt','')}/>)}
+            message: <div style={{width: '100%'}}>
+                <div dangerouslySetInnerHTML={{__html: res.text?.replaceAll('\n', '<br/>')}}/>
+                {[...new Set(res.citations)].map((citation) => <SummaryReferenceInfo
+                    ref={citation.split('/').at(-1).replace('summary_', '').replace('.txt', '')}/>)}
             </div>,
             timestamp: res.timestamp
         }))
@@ -88,7 +89,8 @@ export function Collabi({recording, meetMembers, meetTitle, transcribe, summariz
             style={{width: 'calc(100% - 1rem)', height: 'calc(100% - 1rem)', margin: '0.5rem'}}
             bodyStyle={{height: '100%'}}
         >
-            <div style={{height: 'calc(100% - 2rem)', overflowY: 'auto', flexDirection: 'column-reverse'}} ref={chatRef}>
+            <div style={{height: 'calc(100% - 2rem)', overflowY: 'auto', flexDirection: 'column-reverse'}}
+                 ref={chatRef}>
                 {
                     collabiMessages.sort((a, b) => a.timestamp - b.timestamp).map((speak) => {
                         if (speak.type === 'happy')
@@ -106,9 +108,9 @@ function HappyCollabiMessage({msg}) {
     return (
         <div style={{display: "flex", width: 'calc(100% - 1rem)', margin: '0.5rem', padding: '0.5rem'}}>
 
-            <Avatar  shape="circle" size={80} icon={<img src={collabi}  alt="good"/>}
-                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto', minWidth:'80px'}}/>
-            <div className="speech-bubble" style={{padding:'1rem'}}>
+            <Avatar shape="circle" size={80} icon={<img src={collabi} alt="good"/>}
+                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto', minWidth: '80px'}}/>
+            <div className="speech-bubble" style={{padding: '1rem'}}>
                 {msg}
             </div>
         </div>
@@ -118,19 +120,19 @@ function HappyCollabiMessage({msg}) {
 function AngryCollabiMessage({msg}) {
     return (
         <div style={{display: "flex", width: 'calc(100% - 1rem)', margin: '0.5rem'}}>
-            <Avatar shape="circle" size={80} icon={<img src={angry} style={{minWidth:'100px'}} alt="bad"/>}
-                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto', minWidth:'80px'}}/>
-            <div className="bad-speech-bubble" style={{width:'calc(100% - 100px - 1rem)',padding:'1rem'}}>
+            <Avatar shape="circle" size={80} icon={<img src={angry} style={{minWidth: '100px'}} alt="bad"/>}
+                    style={{marginRight: '1.5rem', marginTop: 'auto', marginBottom: 'auto', minWidth: '80px'}}/>
+            <div className="bad-speech-bubble" style={{width: 'calc(100% - 100px - 1rem)', padding: '1rem'}}>
                 {msg}
             </div>
         </div>
     )
 }
 
-function SummaryReferenceInfo({ref}){
+function SummaryReferenceInfo({ref}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const apiGatewayId = import.meta.env.VITE_GATEWAY_ID
-    const region =  import.meta.env.VITE_REGION
+    const region = import.meta.env.VITE_REGION
     const apiGatewayBaseUrl = `https://${apiGatewayId}.execute-api.${region}.amazonaws.com/prod`
     const [result, setResult] = useState()
     const [fetching, setFetching] = useState(false)
@@ -149,7 +151,7 @@ function SummaryReferenceInfo({ref}){
     };
 
 
-    const getRef = async ()=>{
+    const getRef = async () => {
         setFetching(true)
         const res = await axios.get(`${apiGatewayBaseUrl}/summary`,
             {
@@ -160,18 +162,21 @@ function SummaryReferenceInfo({ref}){
                 }
             })
         setResult(res.data.summary)
-            setFetching(false)
+        setFetching(false)
     }
     return <>
-        <Button className="ref-button" type="text" onClick={showModal} style={{color:'blue', width:'100%', fontSize:'0.7rem', height:'1rem', textAlign:'left'}}> {ref} </Button>
+        <Button className="ref-button" type="text" onClick={showModal}
+                style={{color: 'blue', width: '100%', fontSize: '0.7rem', height: '1rem', textAlign: 'left'}}>
+            {ref}
+        </Button>
         <Modal
-            okButtonProps={{ style: { display:'none' } }}
-            cancelButtonProps={{ style: { display:'none' } }}
+            okButtonProps={{style: {display: 'none'}}}
+            cancelButtonProps={{style: {display: 'none'}}}
             width="80vh"
             height="80vh"
             loading={fetching} title={ref} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-            <div  className={"summary"} style={{height:'calc(100% - 2.5rem)', overflowY: 'auto'}}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{result}</ReactMarkdown>
+            <div className={"summary"} style={{height: 'calc(100% - 2.5rem)', overflowY: 'auto'}}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{result}</ReactMarkdown>
             </div>
         </Modal>
     </>

@@ -25,7 +25,7 @@ export function useHappyCollabi(transcribe) {
         let questions = happyCollabiResponses.current?.map((response: Response) => response.question)
         const res = await axios.post(`${apiGatewayBaseUrl}/happy`,
             {
-                meeting_text: transcribe.current.map(speak => `${speak.value}`).join('\n'),
+                meeting_text: transcribe.current.map(speak => `${speak.value}`).join('\n').slice(-400),
                 queestions: questions,
             }
         )
